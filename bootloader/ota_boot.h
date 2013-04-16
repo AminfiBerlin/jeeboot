@@ -9,9 +9,18 @@
 
 #define BOOT_ARCH   1             // diff for each boot loader setup (1..30)
 #define BOOT_REV    0             // boot loader revision (0..7)
-#define BOOT_FREQ   RF12_868MHZ   // frequency band used to contact boot server
-#define BOOT_GROUP  254           // boot server's net group >= BOOT_BASE
-#define BOOT_BASE   248
+
+#ifndef BOOT_FREQ
+  #define BOOT_FREQ   RF12_868MHZ // frequency band used to contact boot server
+#endif
+
+#ifndef BOOT_GROUP
+  #define BOOT_GROUP  254         // boot server's net group >= BOOT_BASE
+#endif
+
+#ifndef BOOT_BASE
+  #define BOOT_BASE   248
+#endif
 
 #define EEADDR ((byte*) (1024 - 4 - sizeof config))
 

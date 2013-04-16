@@ -6,6 +6,13 @@
 
 PROGRAM = ota_boot
 
+# default bootloader configuration - override on make command-line
+# e.g. make atmega328 BOOT_FREQ=RF12_915MHZ
+# options for BOOT_FREQ are RF12_433MHZ, RF12_868MHZ, and RF12_915MHZ
+BOOT_FREQ  ?= RF12_868MHZ
+BOOT_GROUP ?= 254
+BOOT_BASE  ?= 248
+
 default: atmega328
 
 # enter the parameters for the avrdude isp tool
@@ -33,6 +40,7 @@ SIZE    = avr-size
 # Override is only needed by avr-lib build system.
 
 override CFLAGS = -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) -DF_CPU=$(AVR_FREQ) \
+ -DBOOT_FREQ=$(BOOT_FREQ) -DBOOT_GROUP=$(BOOT_GROUP) -DBOOT_BASE=$(BOOT_BASE) \
  -std=gnu99 $(DEFS)
 override LDFLAGS = -Wl,$(LDSECTION) -Wl,--relax -nostartfiles
 
