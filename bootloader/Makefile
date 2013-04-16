@@ -5,10 +5,8 @@
 # To burn bootloader .hex file:		make atmega328_isp
 
 PROGRAM = ota_boot
-MCU_TARGET = atmega328
-TARGET = atmega328
-AVR_FREQ = 16000000L
-LDSECTION = --section-start=.text=0x7800
+
+default: atmega328
 
 # enter the parameters for the avrdude isp tool
 # ISP_ARGS = -c stk500v2 -P usb -b 115200
@@ -30,6 +28,7 @@ LIBS =
 CC      = avr-gcc
 OBJCOPY = avr-objcopy
 OBJDUMP = avr-objdump
+SIZE    = avr-size
 
 # Override is only needed by avr-lib build system.
 
@@ -37,7 +36,7 @@ override CFLAGS = -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) -DF_CPU=$(AVR_FREQ) \
  -std=gnu99 $(DEFS)
 override LDFLAGS = -Wl,$(LDSECTION) -Wl,--relax -nostartfiles
 
-atmega328: MCU_TARGET = m328p
+atmega328: MCU_TARGET = atmega328p
 atmega328: TARGET = atmega328
 atmega328: AVR_FREQ = 16000000L
 atmega328: LDSECTION = --section-start=.text=0x7800
@@ -52,7 +51,7 @@ atmega328_isp: LFUSE = 4E
 atmega328_isp: EFUSE = 06
 atmega328_isp: isp
 
-attiny84: MCU_TARGET = t84
+attiny84: MCU_TARGET = attiny84
 attiny84: TARGET = attiny84
 attiny84: AVR_FREQ = 800000L
 attiny84: LDSECTION = --section-start=.text=0x1800
@@ -64,7 +63,7 @@ isp: $(TARGET)
 
 %.elf: $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
-	avr-size $@
+	$(SIZE) $@
 
 clean:
 	rm -rf *.o *.elf *.lst *.map *.sym *.lss *.eep *.srec *.bin *.hex
